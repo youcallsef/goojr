@@ -1,4 +1,4 @@
-name: goojr_browser
+name: goojr
 description: "GooJR Custom Browser - Unrestricted script injection, network interceptor, and Gemini AI integration."
 publish_to: 'none'
 version: 1.0.0+1
