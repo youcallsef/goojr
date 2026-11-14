@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List> _pages = [
+  final List<dynamic> _pages = [
     {
       'title': 'نواة GooJR المفتوحة',
       'subtitle':
