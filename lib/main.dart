@@ -114,7 +114,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Column(
             children: [
               const SizedBox(height: 24),
-              // شعار JR المتوهج
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 decoration: BoxDecoration(
@@ -203,7 +202,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                 ),
               ),
-              // مؤشرات الصفحات وزر التالي / ابدأ
               Padding(
                 padding: const EdgeInsets.all(28.0),
                 child: Row(
@@ -275,7 +273,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 // ============================================================================
-// 2. نماذج البيانات وإدارة الحالة للمميزات الـ 21
+// 2. نماذج البيانات وإدارة الحالة
 // ============================================================================
 class UserScript {
   String id;
@@ -351,13 +349,9 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
   double _loadingProgress = 0.0;
   bool _isHomeView = true;
 
-  // قائمة السكريبتات المحقونة
   List<UserScript> _scripts = [];
-
-  // سجلات الشبكة (HAR / Request Logger)
   final List<String> _networkLogs = [];
 
-  // مفاتيح التفعيل السريعة في قائمة الـ 3 نقاط والإعدادات الـ 21
   bool _scriptEngineEnabled = true;
   bool _networkInterceptorEnabled = true;
   bool _fingerprintSpoofing = false;
@@ -423,7 +417,6 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
     if (value is String) await prefs.setString(key, value);
   }
 
-  // تنفيذ البحث الفوري عبر جوجل أو فتح الرابط مباشرة
   void _navigateTo(String input) {
     String query = input.trim();
     if (query.isEmpty) return;
@@ -449,12 +442,10 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
         );
   }
 
-  // حقن السكريبتات والـ CSS في الصفحة المفتوحة
   Future<void> _injectActiveScripts(
       InAppWebViewController controller, String currentUrl) async {
     if (!_scriptEngineEnabled) return;
 
-    // 1. حقن طبقة تزييف البصمة الرقمية إذا كانت مفعلة
     if (_fingerprintSpoofing) {
       await controller.evaluateJavascript(source: """
         Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 4});
@@ -463,7 +454,6 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
       """);
     }
 
-    // 2. حقن السكريبتات المخصصة للمستخدم
     for (final script in _scripts) {
       if (!script.enabled) continue;
       if (script.domainPattern == '*' ||
@@ -494,12 +484,7 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ================================================================
-            // الشريط العلوي: كبسولة Gemini + كبسولة السكريبتات والصور + 3 نقاط
-            // ================================================================
             _buildTopActionBar(),
-
-            // شريط التقدم العلوي عند التحميل (Progress Bar)
             if (_loadingProgress > 0 && _loadingProgress < 1.0)
               LinearProgressIndicator(
                 value: _loadingProgress,
@@ -510,19 +495,11 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
               )
             else
               const SizedBox(height: 2.5),
-
-            // ================================================================
-            // منطقة العرض: الصفحة الرئيسية بشعار JR أو محرك التصفح الفوري
-            // ================================================================
             Expanded(
               child: _isHomeView
                   ? _buildSilverHomeView()
                   : _buildWebViewEngine(activeTab),
             ),
-
-            // ================================================================
-            // شريط التنقل السفلي وإدارة التبويبات
-            // ================================================================
             _buildBottomNavigationBar(),
           ],
         ),
@@ -530,7 +507,6 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
     );
   }
 
-  // الشريط العلوي المدمج بالكبسولات وقائمة الثلاث نقاط
   Widget _buildTopActionBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -542,7 +518,6 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
       ),
       child: Row(
         children: [
-          // 1. كبسولة التحدث مع نموذج gemini-3.5-flash-lite
           Expanded(
             flex: 4,
             child: GestureDetector(
@@ -558,4 +533,41 @@ class _BrowserMainScreenState extends State<BrowserMainScreen> {
                   border:
                       Border.all(color: AppColors.silverGlow.withOpacity(0.45)),
                   boxShadow: [
-     
+                    BoxShadow(
+                      color: AppColors.silverGlow.withOpacity(0.12),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.auto_awesome,
+                        size: 15, color: AppColors.silverGlow),
+                    SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        'gemini-3.5-flash-lite',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.silverGlow,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 4,
+            child: Container(
+              height: 38,
+              decoration: BoxDecoration(
+                color: AppColors.cardGray,
+                borderRadius: BorderRadius.circular(20),
+                border:
+ 
